@@ -1,6 +1,12 @@
 ARG BASE=node:20.18.0
 FROM ${BASE} AS base
 
+# Optimisation pour architecture AMD64
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
 # Install dependencies (this step is cached as long as the dependencies don't change)
@@ -14,8 +20,8 @@ RUN npm install -g pnpm && pnpm install
 # Copy the rest of your app's source code
 COPY . .
 
-# Expose the port the app runs on
-EXPOSE 5173
+# Expose les ports personnalisés
+EXPOSE 44100 44200
 
 # Production image
 FROM base AS bolt-ai-production
@@ -92,4 +98,4 @@ ENV GROQ_API_KEY=${GROQ_API_KEY} \
     RUNNING_IN_DOCKER=true
 
 RUN mkdir -p ${WORKDIR}/run
-CMD pnpm run dev --host
+CMD pnpm run dev --host 0.0.0.0 --port 44100

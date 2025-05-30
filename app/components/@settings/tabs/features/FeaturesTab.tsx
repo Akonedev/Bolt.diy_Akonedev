@@ -1,11 +1,13 @@
 // Remove unused imports
-import React, { memo, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import React, { memo, useCallback, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Switch } from '~/components/ui/Switch';
 import { useSettings } from '~/lib/hooks/useSettings';
 import { classNames } from '~/utils/classNames';
 import { toast } from 'react-toastify';
 import { PromptLibrary } from '~/lib/common/prompt-library';
+import { PromptManagerCard } from './PromptManagerCard';
+import { PromptManager } from '~/components/prompt-manager/PromptManager';
 
 interface FeatureToggle {
   id: string;
@@ -118,6 +120,8 @@ export default function FeaturesTab() {
     setPromptId,
     promptId,
   } = useSettings();
+
+  const [showPromptManager, setShowPromptManager] = useState(false);
 
   // Enable features by default on first load
   React.useEffect(() => {
@@ -235,61 +239,92 @@ export default function FeaturesTab() {
         />
       )}
 
+      {/* Prompt Management Section */}
       <motion.div
         layout
-        className={classNames(
-          'bg-bolt-elements-background-depth-2',
-          'hover:bg-bolt-elements-background-depth-3',
-          'transition-all duration-200',
-          'rounded-lg p-4',
-          'group',
-        )}
+        className="flex flex-col gap-4"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
+        transition={{ duration: 0.3, delay: 0.4 }}
       >
-        <div className="flex items-center gap-4">
-          <div
-            className={classNames(
-              'p-2 rounded-lg text-xl',
-              'bg-bolt-elements-background-depth-3 group-hover:bg-bolt-elements-background-depth-4',
-              'transition-colors duration-200',
-              'text-purple-500',
-            )}
-          >
-            <div className="i-ph:book" />
-          </div>
-          <div className="flex-1">
-            <h4 className="text-sm font-medium text-bolt-elements-textPrimary group-hover:text-purple-500 transition-colors">
-              Prompt Library
-            </h4>
-            <p className="text-xs text-bolt-elements-textSecondary mt-0.5">
-              Choose a prompt from the library to use as the system prompt
+        <div className="flex items-center gap-3">
+          <div className="i-ph:chat-text text-xl text-purple-500" />
+          <div>
+            <h3 className="text-lg font-medium text-bolt-elements-textPrimary">Gestion des Prompts</h3>
+            <p className="text-sm text-bolt-elements-textSecondary">
+              Personnalisez les prompts, outils et rôles pour optimiser vos conversations
             </p>
           </div>
-          <select
-            value={promptId}
-            onChange={(e) => {
-              setPromptId(e.target.value);
-              toast.success('Prompt template updated');
-            }}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Prompt Manager Card */}
+          <PromptManagerCard onClick={() => setShowPromptManager(true)} />
+
+          {/* Legacy Prompt Library Card */}
+          <motion.div
             className={classNames(
-              'p-2 rounded-lg text-sm min-w-[200px]',
-              'bg-bolt-elements-background-depth-3 border border-bolt-elements-borderColor',
-              'text-bolt-elements-textPrimary',
-              'focus:outline-none focus:ring-2 focus:ring-purple-500/30',
-              'group-hover:border-purple-500/30',
+              'bg-bolt-elements-background-depth-2',
+              'hover:bg-bolt-elements-background-depth-3',
               'transition-all duration-200',
+              'rounded-lg p-4',
+              'group',
             )}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
           >
-            {PromptLibrary.getList().map((x) => (
-              <option key={x.id} value={x.id}>
-                {x.label}
-              </option>
-            ))}
-          </select>
+            <div className="flex items-center gap-4">
+              <div
+                className={classNames(
+                  'p-2 rounded-lg text-xl',
+                  'bg-bolt-elements-background-depth-3 group-hover:bg-bolt-elements-background-depth-4',
+                  'transition-colors duration-200',
+                  'text-purple-500',
+                )}
+              >
+                <div className="i-ph:book" />
+              </div>
+              <div className="flex-1">
+                <h4 className="text-sm font-medium text-bolt-elements-textPrimary group-hover:text-purple-500 transition-colors">
+                  Prompt Library (Legacy)
+                </h4>
+                <p className="text-xs text-bolt-elements-textSecondary mt-0.5">
+                  Templates de prompts prédéfinis
+                </p>
+              </div>
+              <select
+                value={promptId}
+                onChange={(e) => {
+                  setPromptId(e.target.value);
+                  toast.success('Prompt template updated');
+                }}
+                className={classNames(
+                  'p-2 rounded-lg text-sm min-w-[200px]',
+                  'bg-bolt-elements-background-depth-3 border border-bolt-elements-borderColor',
+                  'text-bolt-elements-textPrimary',
+                  'focus:outline-none focus:ring-2 focus:ring-purple-500/30',
+                  'group-hover:border-purple-500/30',
+                  'transition-all duration-200',
+                )}
+              >
+                {PromptLibrary.getList().map((x) => (
+                  <option key={x.id} value={x.id}>
+                    {x.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </motion.div>
         </div>
       </motion.div>
+
+      {/* Prompt Manager Modal */}
+      <AnimatePresence>
+        {showPromptManager && (
+          <PromptManager onClose={() => setShowPromptManager(false)} />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
