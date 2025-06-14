@@ -316,7 +316,9 @@ export default function FeaturesTab() {
                 <h4 className="text-sm font-medium text-bolt-elements-textPrimary group-hover:text-purple-500 transition-colors">
                   Prompt Library (Legacy)
                 </h4>
-                <p className="text-xs text-bolt-elements-textSecondary mt-0.5">Templates de prompts prédéfinis - Utilisez le nouveau Gestionnaire de Prompts à la place</p>
+                <p className="text-xs text-bolt-elements-textSecondary mt-0.5">
+                  Templates de prompts prédéfinis - Utilisez le nouveau Gestionnaire de Prompts à la place
+                </p>
               </div>
               <select
                 value={promptId}
@@ -361,7 +363,7 @@ export default function FeaturesTab() {
                 'border border-bolt-elements-borderColor',
                 'rounded-2xl shadow-2xl',
                 'w-full max-w-6xl h-[90vh]',
-                'flex flex-col overflow-hidden'
+                'flex flex-col overflow-hidden',
               )}
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -373,9 +375,7 @@ export default function FeaturesTab() {
                 <div className="flex items-center gap-3">
                   <div className="i-ph:palette text-2xl text-purple-500" />
                   <div>
-                    <h2 className="text-xl font-semibold text-bolt-elements-textPrimary">
-                      Gestionnaire de Thèmes
-                    </h2>
+                    <h2 className="text-xl font-semibold text-bolt-elements-textPrimary">Gestionnaire de Thèmes</h2>
                     <p className="text-sm text-bolt-elements-textSecondary">
                       Personnalisez l'apparence de l'interface avec des thèmes prédéfinis ou créez les vôtres
                     </p>
@@ -386,13 +386,13 @@ export default function FeaturesTab() {
                   className={classNames(
                     'p-2 rounded-lg transition-colors',
                     'hover:bg-bolt-elements-background-depth-3',
-                    'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary'
+                    'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary',
                   )}
                 >
                   <div className="i-ph:x text-xl" />
                 </button>
               </div>
-              
+
               {/* Content */}
               <div className="flex-1 overflow-hidden">
                 <ThemeManager />

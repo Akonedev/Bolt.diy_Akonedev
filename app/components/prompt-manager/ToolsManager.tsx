@@ -69,6 +69,7 @@ export const ToolsManager: React.FC = () => {
 
   const handleUpdateTool = (id: string, updates: Partial<Tool>) => {
     updateTool(id, updates);
+
     // Force immediate save for critical updates like enabled/disabled
     if ('enabled' in updates) {
       setTimeout(() => {
@@ -76,6 +77,7 @@ export const ToolsManager: React.FC = () => {
         window.dispatchEvent(new Event('bolt-force-save'));
       }, 10);
     }
+
     toast.success('Outil mis à jour');
   };
 

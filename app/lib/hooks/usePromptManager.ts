@@ -192,6 +192,7 @@ export const usePromptManager = () => {
     };
 
     window.addEventListener('bolt-force-save', handleForceSave);
+
     return () => window.removeEventListener('bolt-force-save', handleForceSave);
   }, [promptConfig, isLoading, saveConfig]);
 

@@ -86,7 +86,7 @@ import { useThemeManager } from './lib/hooks/useThemeManager';
 
 export default function App() {
   const theme = useStore(themeStore);
-  
+
   // Initialize theme manager
   useThemeManager();
 

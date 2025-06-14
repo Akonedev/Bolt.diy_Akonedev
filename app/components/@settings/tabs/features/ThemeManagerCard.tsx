@@ -14,7 +14,7 @@ export const ThemeManagerCard: React.FC<ThemeManagerCardProps> = ({ onClick }) =
         'bg-gradient-to-br from-purple-500/10 via-pink-500/10 to-blue-500/10',
         'border border-purple-500/20 hover:border-purple-500/40',
         'hover:shadow-lg hover:shadow-purple-500/10',
-        'backdrop-blur-sm'
+        'backdrop-blur-sm',
       )}
       whileHover={{ scale: 1.02, y: -2 }}
       whileTap={{ scale: 0.98 }}
@@ -22,32 +22,30 @@ export const ThemeManagerCard: React.FC<ThemeManagerCardProps> = ({ onClick }) =
     >
       {/* Glow Effect */}
       <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-purple-500/5 via-pink-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-      
+
       {/* Header */}
       <div className="relative flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className={classNames(
-            'flex items-center justify-center w-12 h-12 rounded-xl',
-            'bg-gradient-to-br from-purple-500 to-pink-500',
-            'text-white text-xl',
-            'group-hover:scale-110 transition-transform duration-300'
-          )}>
+          <div
+            className={classNames(
+              'flex items-center justify-center w-12 h-12 rounded-xl',
+              'bg-gradient-to-br from-purple-500 to-pink-500',
+              'text-white text-xl',
+              'group-hover:scale-110 transition-transform duration-300',
+            )}
+          >
             🎨
           </div>
           <div>
             <h3 className="text-lg font-semibold text-bolt-elements-textPrimary group-hover:text-purple-400 transition-colors">
               Gestionnaire de Thèmes
             </h3>
-            <p className="text-sm text-bolt-elements-textSecondary">
-              Personnalisation complète
-            </p>
+            <p className="text-sm text-bolt-elements-textSecondary">Personnalisation complète</p>
           </div>
         </div>
-        
+
         <div className="flex items-center gap-2">
-          <div className="px-2 py-1 rounded-full bg-purple-500/10 text-purple-400 text-xs font-medium">
-            Nouveau
-          </div>
+          <div className="px-2 py-1 rounded-full bg-purple-500/10 text-purple-400 text-xs font-medium">Nouveau</div>
           <div className="i-ph:arrow-right text-bolt-elements-textSecondary group-hover:text-purple-400 group-hover:translate-x-1 transition-all duration-300" />
         </div>
       </div>
@@ -57,7 +55,7 @@ export const ThemeManagerCard: React.FC<ThemeManagerCardProps> = ({ onClick }) =
         <div className="flex gap-2 mb-2">
           {[
             '#8B5CF6', // Purple
-            '#3B82F6', // Blue  
+            '#3B82F6', // Blue
             '#10B981', // Green
             '#F59E0B', // Yellow
             '#EF4444', // Red
@@ -74,9 +72,7 @@ export const ThemeManagerCard: React.FC<ThemeManagerCardProps> = ({ onClick }) =
             />
           ))}
         </div>
-        <div className="text-xs text-bolt-elements-textSecondary">
-          5+ thèmes prédéfinis • Création illimitée
-        </div>
+        <div className="text-xs text-bolt-elements-textSecondary">5+ thèmes prédéfinis • Création illimitée</div>
       </div>
 
       {/* Features List */}
@@ -108,7 +104,7 @@ export const ThemeManagerCard: React.FC<ThemeManagerCardProps> = ({ onClick }) =
             'bg-gradient-to-r from-purple-500 to-pink-500',
             'text-white shadow-lg',
             'hover:shadow-xl hover:shadow-purple-500/25',
-            'group-hover:scale-105 transition-all duration-300'
+            'group-hover:scale-105 transition-all duration-300',
           )}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}

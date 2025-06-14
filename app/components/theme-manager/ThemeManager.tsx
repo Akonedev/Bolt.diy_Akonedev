@@ -5,14 +5,8 @@ import { useThemeManager, type Theme } from '~/lib/hooks/useThemeManager';
 import { toast } from 'react-toastify';
 
 export const ThemeManager: React.FC = () => {
-  const {
-    currentTheme,
-    getAllThemes,
-    setTheme,
-    createCustomTheme,
-    deleteCustomTheme,
-    generateThemeFromColors,
-  } = useThemeManager();
+  const { currentTheme, getAllThemes, setTheme, createCustomTheme, deleteCustomTheme, generateThemeFromColors } =
+    useThemeManager();
 
   const [showCustomForm, setShowCustomForm] = useState(false);
   const [customColors, setCustomColors] = useState({
@@ -43,16 +37,14 @@ export const ThemeManager: React.FC = () => {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h3 className="text-lg font-semibold text-bolt-elements-textPrimary">Gestionnaire de Thèmes</h3>
-          <p className="text-sm text-bolt-elements-textSecondary mt-1">
-            Personnalisez l'apparence de l'interface
-          </p>
+          <p className="text-sm text-bolt-elements-textSecondary mt-1">Personnalisez l'apparence de l'interface</p>
         </div>
         <button
           onClick={() => setShowCustomForm(true)}
           className={classNames(
             'flex items-center gap-2 px-4 py-2 rounded-lg transition-colors',
             'bg-purple-500 hover:bg-purple-600',
-            'text-white text-sm font-medium'
+            'text-white text-sm font-medium',
           )}
         >
           <div className="i-ph:palette" />
@@ -65,14 +57,16 @@ export const ThemeManager: React.FC = () => {
         <h4 className="text-sm font-medium text-bolt-elements-textPrimary mb-3">Thème Actuel</h4>
         <div className="flex items-center gap-4">
           <div className="flex gap-2">
-            {Object.entries(currentTheme.colors).slice(0, 6).map(([key, color]) => (
-              <div
-                key={key}
-                className="w-8 h-8 rounded-full border-2 border-bolt-elements-borderColor"
-                style={{ backgroundColor: color }}
-                title={`${key}: ${color}`}
-              />
-            ))}
+            {Object.entries(currentTheme.colors)
+              .slice(0, 6)
+              .map(([key, color]) => (
+                <div
+                  key={key}
+                  className="w-8 h-8 rounded-full border-2 border-bolt-elements-borderColor"
+                  style={{ backgroundColor: color }}
+                  title={`${key}: ${color}`}
+                />
+              ))}
           </div>
           <div className="flex-1">
             <div className="font-medium text-bolt-elements-textPrimary">{currentTheme.name}</div>
@@ -93,7 +87,7 @@ export const ThemeManager: React.FC = () => {
             className="mb-6 p-4 bg-bolt-elements-background-depth-2 rounded-lg border border-bolt-elements-borderColor"
           >
             <h4 className="text-sm font-medium text-bolt-elements-textPrimary mb-4">Créer un Thème Personnalisé</h4>
-            
+
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -115,13 +109,13 @@ export const ThemeManager: React.FC = () => {
                         'flex-1 px-3 py-2 rounded-lg text-sm',
                         'bg-bolt-elements-background-depth-3 border border-bolt-elements-borderColor',
                         'text-bolt-elements-textPrimary',
-                        'focus:outline-none focus:ring-2 focus:ring-purple-500/30'
+                        'focus:outline-none focus:ring-2 focus:ring-purple-500/30',
                       )}
                       placeholder="#8B5CF6"
                     />
                   </div>
                 </div>
-                
+
                 <div>
                   <label className="block text-xs font-medium text-bolt-elements-textPrimary mb-2">
                     Couleur de Fond
@@ -141,7 +135,7 @@ export const ThemeManager: React.FC = () => {
                         'flex-1 px-3 py-2 rounded-lg text-sm',
                         'bg-bolt-elements-background-depth-3 border border-bolt-elements-borderColor',
                         'text-bolt-elements-textPrimary',
-                        'focus:outline-none focus:ring-2 focus:ring-purple-500/30'
+                        'focus:outline-none focus:ring-2 focus:ring-purple-500/30',
                       )}
                       placeholder="#0F0F0F"
                     />
@@ -152,17 +146,14 @@ export const ThemeManager: React.FC = () => {
               {/* Preview */}
               <div className="p-4 rounded-lg border border-bolt-elements-borderColor">
                 <div className="text-xs text-bolt-elements-textSecondary mb-2">Aperçu</div>
-                <div 
+                <div
                   className="h-20 rounded flex items-center justify-center text-white text-sm font-medium"
-                  style={{ 
+                  style={{
                     backgroundColor: customColors.background,
-                    border: `2px solid ${customColors.primary}`
+                    border: `2px solid ${customColors.primary}`,
                   }}
                 >
-                  <div 
-                    className="px-4 py-2 rounded"
-                    style={{ backgroundColor: customColors.primary }}
-                  >
+                  <div className="px-4 py-2 rounded" style={{ backgroundColor: customColors.primary }}>
                     Exemple de bouton
                   </div>
                 </div>
@@ -174,7 +165,7 @@ export const ThemeManager: React.FC = () => {
                   className={classNames(
                     'px-4 py-2 text-sm rounded-lg transition-colors',
                     'bg-bolt-elements-background-depth-3 hover:bg-bolt-elements-background-depth-4',
-                    'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary'
+                    'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary',
                   )}
                 >
                   Annuler
@@ -184,7 +175,7 @@ export const ThemeManager: React.FC = () => {
                   className={classNames(
                     'px-4 py-2 text-sm rounded-lg transition-colors',
                     'bg-purple-500 hover:bg-purple-600',
-                    'text-white font-medium'
+                    'text-white font-medium',
                   )}
                 >
                   Créer le thème
@@ -205,46 +196,44 @@ export const ThemeManager: React.FC = () => {
                 'p-4 rounded-lg border transition-all cursor-pointer',
                 currentTheme.id === theme.id
                   ? 'ring-2 ring-purple-500 border-purple-500/50 bg-purple-500/10'
-                  : 'border-bolt-elements-borderColor hover:border-purple-500/30 bg-bolt-elements-background-depth-2'
+                  : 'border-bolt-elements-borderColor hover:border-purple-500/30 bg-bolt-elements-background-depth-2',
               )}
               whileHover={{ scale: 1.02 }}
               onClick={() => setTheme(theme.id)}
             >
               {/* Theme Preview */}
               <div className="mb-3">
-                <div 
+                <div
                   className="h-16 rounded mb-2 flex items-center justify-center relative overflow-hidden"
                   style={{ backgroundColor: theme.colors.background }}
                 >
-                  <div 
+                  <div
                     className="absolute top-2 left-2 right-2 h-2 rounded"
                     style={{ backgroundColor: theme.colors.surface }}
                   />
-                  <div 
+                  <div
                     className="w-12 h-6 rounded text-xs flex items-center justify-center text-white font-medium"
                     style={{ backgroundColor: theme.colors.primary }}
                   >
                     App
                   </div>
-                  <div 
+                  <div
                     className="absolute bottom-2 left-2 w-4 h-4 rounded-full"
                     style={{ backgroundColor: theme.colors.accent }}
                   />
-                  <div 
+                  <div
                     className="absolute bottom-2 right-2 w-6 h-2 rounded"
                     style={{ backgroundColor: theme.colors.secondary }}
                   />
                 </div>
-                
+
                 {/* Color Palette */}
                 <div className="flex gap-1">
-                  {[theme.colors.primary, theme.colors.secondary, theme.colors.accent, theme.colors.success].map((color, i) => (
-                    <div
-                      key={i}
-                      className="w-3 h-3 rounded-full flex-shrink-0"
-                      style={{ backgroundColor: color }}
-                    />
-                  ))}
+                  {[theme.colors.primary, theme.colors.secondary, theme.colors.accent, theme.colors.success].map(
+                    (color, i) => (
+                      <div key={i} className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
+                    ),
+                  )}
                 </div>
               </div>
 
@@ -256,11 +245,9 @@ export const ThemeManager: React.FC = () => {
                     {theme.id.startsWith('custom-') ? 'Personnalisé' : 'Prédéfini'}
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-1">
-                  {currentTheme.id === theme.id && (
-                    <div className="i-ph:check-circle text-purple-500" />
-                  )}
+                  {currentTheme.id === theme.id && <div className="i-ph:check-circle text-purple-500" />}
                   {theme.id.startsWith('custom-') && (
                     <button
                       onClick={(e) => {
@@ -269,7 +256,7 @@ export const ThemeManager: React.FC = () => {
                       }}
                       className={classNames(
                         'p-1 rounded hover:bg-red-500/10 text-bolt-elements-textSecondary hover:text-red-500',
-                        'transition-colors'
+                        'transition-colors',
                       )}
                     >
                       <div className="i-ph:trash text-xs" />
@@ -291,13 +278,13 @@ export const ThemeManager: React.FC = () => {
           </div>
           <div>
             <div className="text-lg font-semibold text-purple-500">
-              {allThemes.filter(t => t.id.startsWith('custom-')).length}
+              {allThemes.filter((t) => t.id.startsWith('custom-')).length}
             </div>
             <div className="text-xs text-bolt-elements-textSecondary">Personnalisés</div>
           </div>
           <div>
             <div className="text-lg font-semibold text-green-500">
-              {allThemes.filter(t => !t.id.startsWith('custom-')).length}
+              {allThemes.filter((t) => !t.id.startsWith('custom-')).length}
             </div>
             <div className="text-xs text-bolt-elements-textSecondary">Prédéfinis</div>
           </div>

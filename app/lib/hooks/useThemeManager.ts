@@ -173,16 +173,18 @@ export const useThemeManager = () => {
   useEffect(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
+
       if (saved) {
         const config = JSON.parse(saved);
+
         if (config.currentThemeId) {
-          const theme = [...defaultThemes, ...config.customThemes].find(
-            t => t.id === config.currentThemeId
-          );
+          const theme = [...defaultThemes, ...config.customThemes].find((t) => t.id === config.currentThemeId);
+
           if (theme) {
             setCurrentTheme(theme);
           }
         }
+
         if (config.customThemes) {
           setCustomThemes(config.customThemes);
         }
@@ -204,7 +206,7 @@ export const useThemeManager = () => {
 
   const applyTheme = useCallback((theme: Theme) => {
     const root = document.documentElement;
-    
+
     // Apply CSS variables
     Object.entries(theme.cssVariables).forEach(([property, value]) => {
       root.style.setProperty(property, value);
@@ -231,43 +233,50 @@ export const useThemeManager = () => {
     }
   }, [currentTheme.id, customThemes]);
 
-  const setTheme = useCallback((themeId: string) => {
-    const theme = [...defaultThemes, ...customThemes].find(t => t.id === themeId);
-    if (theme) {
-      setCurrentTheme(theme);
-    }
-  }, [customThemes]);
+  const setTheme = useCallback(
+    (themeId: string) => {
+      const theme = [...defaultThemes, ...customThemes].find((t) => t.id === themeId);
+
+      if (theme) {
+        setCurrentTheme(theme);
+      }
+    },
+    [customThemes],
+  );
 
   const createCustomTheme = useCallback((theme: Omit<Theme, 'id'>) => {
     const newTheme: Theme = {
       ...theme,
       id: `custom-${Date.now()}`,
     };
-    setCustomThemes(prev => [...prev, newTheme]);
+    setCustomThemes((prev) => [...prev, newTheme]);
+
     return newTheme;
   }, []);
 
-  const updateCustomTheme = useCallback((id: string, updates: Partial<Theme>) => {
-    setCustomThemes(prev => 
-      prev.map(theme => 
-        theme.id === id ? { ...theme, ...updates } : theme
-      )
-    );
-    
-    // If updating current theme, apply changes immediately
-    if (currentTheme.id === id) {
-      setCurrentTheme(prev => ({ ...prev, ...updates }));
-    }
-  }, [currentTheme.id]);
+  const updateCustomTheme = useCallback(
+    (id: string, updates: Partial<Theme>) => {
+      setCustomThemes((prev) => prev.map((theme) => (theme.id === id ? { ...theme, ...updates } : theme)));
 
-  const deleteCustomTheme = useCallback((id: string) => {
-    setCustomThemes(prev => prev.filter(theme => theme.id !== id));
-    
-    // If deleting current theme, switch to default
-    if (currentTheme.id === id) {
-      setCurrentTheme(defaultThemes[0]);
-    }
-  }, [currentTheme.id]);
+      // If updating current theme, apply changes immediately
+      if (currentTheme.id === id) {
+        setCurrentTheme((prev) => ({ ...prev, ...updates }));
+      }
+    },
+    [currentTheme.id],
+  );
+
+  const deleteCustomTheme = useCallback(
+    (id: string) => {
+      setCustomThemes((prev) => prev.filter((theme) => theme.id !== id));
+
+      // If deleting current theme, switch to default
+      if (currentTheme.id === id) {
+        setCurrentTheme(defaultThemes[0]);
+      }
+    },
+    [currentTheme.id],
+  );
 
   const getAllThemes = useCallback(() => {
     return [...defaultThemes, ...customThemes];
@@ -276,7 +285,7 @@ export const useThemeManager = () => {
   const generateThemeFromColors = useCallback((primary: string, background: string) => {
     // Simple theme generation based on primary and background colors
     const isDark = background === '#000000' || background.startsWith('#1') || background.startsWith('#0');
-    
+
     return {
       name: 'Thème Personnalisé',
       colors: {

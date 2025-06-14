@@ -81,6 +81,7 @@ export const RolesManager: React.FC = () => {
 
   const handleUpdateRole = (id: string, updates: Partial<Role>) => {
     updateRole(id, updates);
+
     // Force immediate save for critical updates like enabled/disabled
     if ('enabled' in updates) {
       setTimeout(() => {
@@ -88,6 +89,7 @@ export const RolesManager: React.FC = () => {
         window.dispatchEvent(new Event('bolt-force-save'));
       }, 10);
     }
+
     toast.success('Rôle mis à jour');
   };
 
