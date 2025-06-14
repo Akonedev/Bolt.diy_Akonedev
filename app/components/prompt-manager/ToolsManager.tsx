@@ -62,13 +62,20 @@ export const ToolsManager: React.FC = () => {
     toast.success('Outil ajouté');
   };
 
-  const handleAddPredefinedTool = (predefined: typeof predefinedTools[0]) => {
+  const handleAddPredefinedTool = (predefined: (typeof predefinedTools)[0]) => {
     addTool({ ...predefined, enabled: true });
     toast.success(`Outil "${predefined.name}" ajouté`);
   };
 
   const handleUpdateTool = (id: string, updates: Partial<Tool>) => {
     updateTool(id, updates);
+    // Force immediate save for critical updates like enabled/disabled
+    if ('enabled' in updates) {
+      setTimeout(() => {
+        // This will trigger the auto-save immediately
+        window.dispatchEvent(new Event('bolt-force-save'));
+      }, 10);
+    }
     toast.success('Outil mis à jour');
   };
 
@@ -84,9 +91,7 @@ export const ToolsManager: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="text-lg font-semibold text-bolt-elements-textPrimary">
-            Gestionnaire d'Outils
-          </h3>
+          <h3 className="text-lg font-semibold text-bolt-elements-textPrimary">Gestionnaire d'Outils</h3>
           <p className="text-sm text-bolt-elements-textSecondary mt-1">
             Configurez les outils disponibles pour améliorer les capacités de l'IA
           </p>
@@ -96,7 +101,7 @@ export const ToolsManager: React.FC = () => {
           className={classNames(
             'flex items-center gap-2 px-4 py-2 rounded-lg transition-colors',
             'bg-purple-500 hover:bg-purple-600',
-            'text-white text-sm font-medium'
+            'text-white text-sm font-medium',
           )}
         >
           <div className="i-ph:plus" />
@@ -106,12 +111,10 @@ export const ToolsManager: React.FC = () => {
 
       {/* Predefined Tools */}
       <div className="mb-6">
-        <h4 className="text-sm font-medium text-bolt-elements-textPrimary mb-3">
-          Outils prédéfinis
-        </h4>
+        <h4 className="text-sm font-medium text-bolt-elements-textPrimary mb-3">Outils prédéfinis</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {predefinedTools.map((tool, index) => {
-            const isAdded = promptConfig.tools.some(t => t.command === tool.command);
+            const isAdded = promptConfig.tools.some((t) => t.command === tool.command);
             return (
               <motion.div
                 key={tool.command}
@@ -119,24 +122,24 @@ export const ToolsManager: React.FC = () => {
                   'p-3 rounded-lg border transition-all cursor-pointer',
                   isAdded
                     ? 'bg-green-500/10 border-green-500/20'
-                    : 'bg-bolt-elements-background-depth-2 border-bolt-elements-borderColor hover:border-purple-500/30'
+                    : 'bg-bolt-elements-background-depth-2 border-bolt-elements-borderColor hover:border-purple-500/30',
                 )}
                 whileHover={{ scale: 1.02 }}
                 onClick={() => !isAdded && handleAddPredefinedTool(tool)}
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <h5 className="text-sm font-medium text-bolt-elements-textPrimary mb-1">
-                      {tool.name}
-                    </h5>
-                    <p className="text-xs text-bolt-elements-textSecondary line-clamp-2">
-                      {tool.description}
-                    </p>
+                    <h5 className="text-sm font-medium text-bolt-elements-textPrimary mb-1">{tool.name}</h5>
+                    <p className="text-xs text-bolt-elements-textSecondary line-clamp-2">{tool.description}</p>
                   </div>
-                  <div className={classNames(
-                    'ml-2 p-1 rounded-full',
-                    isAdded ? 'bg-green-500 text-white' : 'bg-bolt-elements-background-depth-3 text-bolt-elements-textSecondary'
-                  )}>
+                  <div
+                    className={classNames(
+                      'ml-2 p-1 rounded-full',
+                      isAdded
+                        ? 'bg-green-500 text-white'
+                        : 'bg-bolt-elements-background-depth-3 text-bolt-elements-textSecondary',
+                    )}
+                  >
                     <div className={isAdded ? 'i-ph:check' : 'i-ph:plus'} />
                   </div>
                 </div>
@@ -155,10 +158,8 @@ export const ToolsManager: React.FC = () => {
             exit={{ opacity: 0, height: 0 }}
             className="mb-6 p-4 bg-bolt-elements-background-depth-2 rounded-lg border border-bolt-elements-borderColor"
           >
-            <h4 className="text-sm font-medium text-bolt-elements-textPrimary mb-4">
-              Nouvel outil personnalisé
-            </h4>
-            
+            <h4 className="text-sm font-medium text-bolt-elements-textPrimary mb-4">Nouvel outil personnalisé</h4>
+
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -173,15 +174,13 @@ export const ToolsManager: React.FC = () => {
                       'w-full p-3 rounded-lg text-sm',
                       'bg-bolt-elements-background-depth-3 border border-bolt-elements-borderColor',
                       'text-bolt-elements-textPrimary',
-                      'focus:outline-none focus:ring-2 focus:ring-purple-500/30'
+                      'focus:outline-none focus:ring-2 focus:ring-purple-500/30',
                     )}
                     placeholder="Ex: Vérificateur de syntaxe"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-bolt-elements-textPrimary mb-2">
-                    Commande
-                  </label>
+                  <label className="block text-xs font-medium text-bolt-elements-textPrimary mb-2">Commande</label>
                   <input
                     type="text"
                     value={newTool.command}
@@ -190,7 +189,7 @@ export const ToolsManager: React.FC = () => {
                       'w-full p-3 rounded-lg text-sm',
                       'bg-bolt-elements-background-depth-3 border border-bolt-elements-borderColor',
                       'text-bolt-elements-textPrimary',
-                      'focus:outline-none focus:ring-2 focus:ring-purple-500/30'
+                      'focus:outline-none focus:ring-2 focus:ring-purple-500/30',
                     )}
                     placeholder="syntax-check"
                   />
@@ -198,9 +197,7 @@ export const ToolsManager: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-bolt-elements-textPrimary mb-2">
-                  Description
-                </label>
+                <label className="block text-xs font-medium text-bolt-elements-textPrimary mb-2">Description</label>
                 <textarea
                   value={newTool.description}
                   onChange={(e) => setNewTool({ ...newTool, description: e.target.value })}
@@ -210,7 +207,7 @@ export const ToolsManager: React.FC = () => {
                     'bg-bolt-elements-background-depth-3 border border-bolt-elements-borderColor',
                     'text-bolt-elements-textPrimary',
                     'focus:outline-none focus:ring-2 focus:ring-purple-500/30',
-                    'resize-none'
+                    'resize-none',
                   )}
                   placeholder="Décrivez ce que fait cet outil..."
                 />
@@ -230,7 +227,7 @@ export const ToolsManager: React.FC = () => {
                     className={classNames(
                       'px-3 py-1.5 text-xs rounded-lg transition-colors',
                       'bg-bolt-elements-background-depth-3 hover:bg-bolt-elements-background-depth-4',
-                      'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary'
+                      'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary',
                     )}
                   >
                     Annuler
@@ -240,7 +237,7 @@ export const ToolsManager: React.FC = () => {
                     className={classNames(
                       'px-3 py-1.5 text-xs rounded-lg transition-colors',
                       'bg-purple-500 hover:bg-purple-600',
-                      'text-white font-medium'
+                      'text-white font-medium',
                     )}
                   >
                     Ajouter
@@ -257,9 +254,7 @@ export const ToolsManager: React.FC = () => {
         {promptConfig.tools.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center">
             <div className="i-ph:wrench text-4xl text-bolt-elements-textSecondary mb-4" />
-            <h4 className="text-lg font-medium text-bolt-elements-textPrimary mb-2">
-              Aucun outil configuré
-            </h4>
+            <h4 className="text-lg font-medium text-bolt-elements-textPrimary mb-2">Aucun outil configuré</h4>
             <p className="text-sm text-bolt-elements-textSecondary mb-4">
               Ajoutez des outils pour étendre les capacités de l'IA
             </p>
@@ -268,7 +263,7 @@ export const ToolsManager: React.FC = () => {
               className={classNames(
                 'px-4 py-2 rounded-lg transition-colors',
                 'bg-purple-500 hover:bg-purple-600',
-                'text-white text-sm font-medium'
+                'text-white text-sm font-medium',
               )}
             >
               Ajouter mon premier outil
@@ -284,25 +279,21 @@ export const ToolsManager: React.FC = () => {
                   'p-4 rounded-lg border transition-all',
                   tool.enabled
                     ? 'bg-bolt-elements-background-depth-2 border-bolt-elements-borderColor'
-                    : 'bg-bolt-elements-background-depth-1 border-bolt-elements-borderColor opacity-60'
+                    : 'bg-bolt-elements-background-depth-1 border-bolt-elements-borderColor opacity-60',
                 )}
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <div className="i-ph:wrench text-purple-500" />
-                      <h4 className="font-medium text-bolt-elements-textPrimary">
-                        {tool.name}
-                      </h4>
+                      <h4 className="font-medium text-bolt-elements-textPrimary">{tool.name}</h4>
                       {tool.command && (
                         <code className="px-2 py-0.5 text-xs rounded bg-bolt-elements-background-depth-3 text-bolt-elements-textSecondary">
                           {tool.command}
                         </code>
                       )}
                     </div>
-                    <p className="text-sm text-bolt-elements-textSecondary line-clamp-2">
-                      {tool.description}
-                    </p>
+                    <p className="text-sm text-bolt-elements-textSecondary line-clamp-2">{tool.description}</p>
                   </div>
                   <div className="flex items-center gap-2 ml-4">
                     <Switch
@@ -314,7 +305,7 @@ export const ToolsManager: React.FC = () => {
                       className={classNames(
                         'p-1.5 rounded-lg transition-colors',
                         'hover:bg-bolt-elements-background-depth-3',
-                        'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary'
+                        'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary',
                       )}
                     >
                       <div className="i-ph:pencil text-sm" />
@@ -324,7 +315,7 @@ export const ToolsManager: React.FC = () => {
                       className={classNames(
                         'p-1.5 rounded-lg transition-colors',
                         'hover:bg-red-500/10',
-                        'text-bolt-elements-textSecondary hover:text-red-500'
+                        'text-bolt-elements-textSecondary hover:text-red-500',
                       )}
                     >
                       <div className="i-ph:trash text-sm" />
@@ -345,7 +336,7 @@ export const ToolsManager: React.FC = () => {
                         className={classNames(
                           'w-full p-2 rounded text-sm',
                           'bg-bolt-elements-background-depth-3 border border-bolt-elements-borderColor',
-                          'text-bolt-elements-textPrimary'
+                          'text-bolt-elements-textPrimary',
                         )}
                         placeholder="Nom de l'outil"
                         onBlur={(e) => {
@@ -360,7 +351,7 @@ export const ToolsManager: React.FC = () => {
                           'w-full p-2 rounded text-sm',
                           'bg-bolt-elements-background-depth-3 border border-bolt-elements-borderColor',
                           'text-bolt-elements-textPrimary',
-                          'resize-none'
+                          'resize-none',
                         )}
                         rows={2}
                         placeholder="Description"
@@ -384,20 +375,18 @@ export const ToolsManager: React.FC = () => {
         <div className="mt-4 p-4 bg-bolt-elements-background-depth-2 rounded-lg">
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
-              <div className="text-lg font-semibold text-bolt-elements-textPrimary">
-                {promptConfig.tools.length}
-              </div>
+              <div className="text-lg font-semibold text-bolt-elements-textPrimary">{promptConfig.tools.length}</div>
               <div className="text-xs text-bolt-elements-textSecondary">Total</div>
             </div>
             <div>
               <div className="text-lg font-semibold text-green-500">
-                {promptConfig.tools.filter(t => t.enabled).length}
+                {promptConfig.tools.filter((t) => t.enabled).length}
               </div>
               <div className="text-xs text-bolt-elements-textSecondary">Actifs</div>
             </div>
             <div>
               <div className="text-lg font-semibold text-purple-500">
-                {promptConfig.tools.filter(t => t.enabled).length > 0 ? '✓' : '✗'}
+                {promptConfig.tools.filter((t) => t.enabled).length > 0 ? '✓' : '✗'}
               </div>
               <div className="text-xs text-bolt-elements-textSecondary">Disponibles</div>
             </div>

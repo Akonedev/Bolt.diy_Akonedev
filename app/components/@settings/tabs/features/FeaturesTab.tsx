@@ -7,7 +7,9 @@ import { classNames } from '~/utils/classNames';
 import { toast } from 'react-toastify';
 import { PromptLibrary } from '~/lib/common/prompt-library';
 import { PromptManagerCard } from './PromptManagerCard';
+import { ThemeManagerCard } from './ThemeManagerCard';
 import { PromptManager } from '~/components/prompt-manager/PromptManager';
+import { ThemeManager } from '~/components/theme-manager/ThemeManager';
 
 interface FeatureToggle {
   id: string;
@@ -122,6 +124,7 @@ export default function FeaturesTab() {
   } = useSettings();
 
   const [showPromptManager, setShowPromptManager] = useState(false);
+  const [showThemeManager, setShowThemeManager] = useState(false);
 
   // Enable features by default on first load
   React.useEffect(() => {
@@ -239,7 +242,7 @@ export default function FeaturesTab() {
         />
       )}
 
-      {/* Prompt Management Section */}
+      {/* Customization Section */}
       <motion.div
         layout
         className="flex flex-col gap-4"
@@ -248,19 +251,43 @@ export default function FeaturesTab() {
         transition={{ duration: 0.3, delay: 0.4 }}
       >
         <div className="flex items-center gap-3">
-          <div className="i-ph:chat-text text-xl text-purple-500" />
+          <div className="i-ph:palette text-xl text-purple-500" />
           <div>
-            <h3 className="text-lg font-medium text-bolt-elements-textPrimary">Gestion des Prompts</h3>
+            <h3 className="text-lg font-medium text-bolt-elements-textPrimary">Personnalisation</h3>
             <p className="text-sm text-bolt-elements-textSecondary">
-              Personnalisez les prompts, outils et rôles pour optimiser vos conversations
+              Personnalisez l'apparence et le comportement de l'application
             </p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Theme Manager Card */}
+          <ThemeManagerCard onClick={() => setShowThemeManager(true)} />
+
           {/* Prompt Manager Card */}
           <PromptManagerCard onClick={() => setShowPromptManager(true)} />
+        </div>
+      </motion.div>
 
+      {/* Legacy Features Section */}
+      <motion.div
+        layout
+        className="flex flex-col gap-4"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 0.5 }}
+      >
+        <div className="flex items-center gap-3">
+          <div className="i-ph:book text-xl text-gray-500" />
+          <div>
+            <h3 className="text-lg font-medium text-bolt-elements-textPrimary">Fonctionnalités Legacy</h3>
+            <p className="text-sm text-bolt-elements-textSecondary">
+              Anciennes fonctionnalités maintenues pour la compatibilité
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4">
           {/* Legacy Prompt Library Card */}
           <motion.div
             className={classNames(
@@ -280,7 +307,7 @@ export default function FeaturesTab() {
                   'p-2 rounded-lg text-xl',
                   'bg-bolt-elements-background-depth-3 group-hover:bg-bolt-elements-background-depth-4',
                   'transition-colors duration-200',
-                  'text-purple-500',
+                  'text-gray-500',
                 )}
               >
                 <div className="i-ph:book" />
@@ -289,9 +316,7 @@ export default function FeaturesTab() {
                 <h4 className="text-sm font-medium text-bolt-elements-textPrimary group-hover:text-purple-500 transition-colors">
                   Prompt Library (Legacy)
                 </h4>
-                <p className="text-xs text-bolt-elements-textSecondary mt-0.5">
-                  Templates de prompts prédéfinis
-                </p>
+                <p className="text-xs text-bolt-elements-textSecondary mt-0.5">Templates de prompts prédéfinis - Utilisez le nouveau Gestionnaire de Prompts à la place</p>
               </div>
               <select
                 value={promptId}
@@ -319,10 +344,61 @@ export default function FeaturesTab() {
         </div>
       </motion.div>
 
-      {/* Prompt Manager Modal */}
+      {/* Modals */}
       <AnimatePresence>
-        {showPromptManager && (
-          <PromptManager onClose={() => setShowPromptManager(false)} />
+        {showPromptManager && <PromptManager onClose={() => setShowPromptManager(false)} />}
+        {showThemeManager && (
+          <motion.div
+            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={(e) => e.target === e.currentTarget && setShowThemeManager(false)}
+          >
+            <motion.div
+              className={classNames(
+                'bg-bolt-elements-background-depth-1',
+                'border border-bolt-elements-borderColor',
+                'rounded-2xl shadow-2xl',
+                'w-full max-w-6xl h-[90vh]',
+                'flex flex-col overflow-hidden'
+              )}
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: 'spring', duration: 0.3 }}
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between p-6 border-b border-bolt-elements-borderColor">
+                <div className="flex items-center gap-3">
+                  <div className="i-ph:palette text-2xl text-purple-500" />
+                  <div>
+                    <h2 className="text-xl font-semibold text-bolt-elements-textPrimary">
+                      Gestionnaire de Thèmes
+                    </h2>
+                    <p className="text-sm text-bolt-elements-textSecondary">
+                      Personnalisez l'apparence de l'interface avec des thèmes prédéfinis ou créez les vôtres
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowThemeManager(false)}
+                  className={classNames(
+                    'p-2 rounded-lg transition-colors',
+                    'hover:bg-bolt-elements-background-depth-3',
+                    'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary'
+                  )}
+                >
+                  <div className="i-ph:x text-xl" />
+                </button>
+              </div>
+              
+              {/* Content */}
+              <div className="flex-1 overflow-hidden">
+                <ThemeManager />
+              </div>
+            </motion.div>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>

@@ -25,6 +25,7 @@ export const SystemPromptEditor: React.FC = () => {
 
   const handleTemplateChange = (templateId: string) => {
     setSelectedTemplate(templateId);
+
     if (templateId !== 'custom') {
       try {
         const templateContent = PromptLibrary.getPropmtFromLibrary(templateId, {
@@ -44,9 +45,7 @@ export const SystemPromptEditor: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="text-lg font-semibold text-bolt-elements-textPrimary">
-            Prompt Système
-          </h3>
+          <h3 className="text-lg font-semibold text-bolt-elements-textPrimary">Prompt Système</h3>
           <p className="text-sm text-bolt-elements-textSecondary mt-1">
             Configurez le comportement de base de l'assistant IA
           </p>
@@ -65,9 +64,7 @@ export const SystemPromptEditor: React.FC = () => {
 
       {/* Template Selector */}
       <div className="mb-6">
-        <label className="block text-sm font-medium text-bolt-elements-textPrimary mb-2">
-          Template de base
-        </label>
+        <label className="block text-sm font-medium text-bolt-elements-textPrimary mb-2">Template de base</label>
         <select
           value={selectedTemplate}
           onChange={(e) => handleTemplateChange(e.target.value)}
@@ -76,7 +73,7 @@ export const SystemPromptEditor: React.FC = () => {
             'bg-bolt-elements-background-depth-3 border border-bolt-elements-borderColor',
             'text-bolt-elements-textPrimary',
             'focus:outline-none focus:ring-2 focus:ring-purple-500/30',
-            'transition-all duration-200'
+            'transition-all duration-200',
           )}
         >
           {PromptLibrary.getList().map((template) => (
@@ -91,9 +88,7 @@ export const SystemPromptEditor: React.FC = () => {
       {/* Content Editor */}
       <div className="flex-1 flex flex-col">
         <div className="flex items-center justify-between mb-3">
-          <label className="text-sm font-medium text-bolt-elements-textPrimary">
-            Contenu du prompt
-          </label>
+          <label className="text-sm font-medium text-bolt-elements-textPrimary">Contenu du prompt</label>
           <div className="flex gap-2">
             {isEditing ? (
               <>
@@ -102,7 +97,7 @@ export const SystemPromptEditor: React.FC = () => {
                   className={classNames(
                     'px-3 py-1.5 text-xs rounded-lg transition-colors',
                     'bg-bolt-elements-background-depth-3 hover:bg-bolt-elements-background-depth-4',
-                    'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary'
+                    'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary',
                   )}
                 >
                   Annuler
@@ -112,7 +107,7 @@ export const SystemPromptEditor: React.FC = () => {
                   className={classNames(
                     'px-3 py-1.5 text-xs rounded-lg transition-colors',
                     'bg-purple-500 hover:bg-purple-600',
-                    'text-white font-medium'
+                    'text-white font-medium',
                   )}
                 >
                   Sauvegarder
@@ -124,7 +119,7 @@ export const SystemPromptEditor: React.FC = () => {
                 className={classNames(
                   'px-3 py-1.5 text-xs rounded-lg transition-colors',
                   'bg-bolt-elements-background-depth-3 hover:bg-bolt-elements-background-depth-4',
-                  'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary'
+                  'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary',
                 )}
               >
                 Modifier
@@ -142,7 +137,7 @@ export const SystemPromptEditor: React.FC = () => {
               'bg-bolt-elements-background-depth-3 border border-bolt-elements-borderColor',
               'text-bolt-elements-textPrimary',
               'focus:outline-none focus:ring-2 focus:ring-purple-500/30',
-              'resize-none transition-all duration-200'
+              'resize-none transition-all duration-200',
             )}
             placeholder="Saisissez votre prompt système..."
           />
@@ -152,7 +147,7 @@ export const SystemPromptEditor: React.FC = () => {
               'flex-1 w-full p-4 rounded-lg text-sm',
               'bg-bolt-elements-background-depth-3 border border-bolt-elements-borderColor',
               'text-bolt-elements-textSecondary',
-              'overflow-y-auto whitespace-pre-wrap'
+              'overflow-y-auto whitespace-pre-wrap',
             )}
           >
             {promptConfig.systemPrompt.content || 'Aucun prompt configuré'}
@@ -171,7 +166,7 @@ export const SystemPromptEditor: React.FC = () => {
           </div>
           <div>
             <div className="text-lg font-semibold text-bolt-elements-textPrimary">
-              {promptConfig.systemPrompt.content.split(/\s+/).filter(w => w.length > 0).length}
+              {promptConfig.systemPrompt.content.split(/\s+/).filter((w) => w.length > 0).length}
             </div>
             <div className="text-xs text-bolt-elements-textSecondary">Mots</div>
           </div>

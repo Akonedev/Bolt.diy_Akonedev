@@ -80,14 +80,16 @@ Vous devez toujours:
       id: 'developer',
       name: 'Développeur Senior',
       description: 'Expert en développement logiciel',
-      prompt: 'Vous êtes un développeur senior avec 10+ années d\'expérience. Concentrez-vous sur les bonnes pratiques, l\'architecture et la performance.',
+      prompt:
+        "Vous êtes un développeur senior avec 10+ années d'expérience. Concentrez-vous sur les bonnes pratiques, l'architecture et la performance.",
       enabled: false,
     },
     {
       id: 'architect',
       name: 'Architecte Logiciel',
       description: 'Spécialiste en architecture système',
-      prompt: 'Vous êtes un architecte logiciel expert. Concentrez-vous sur la conception de systèmes scalables, les patterns architecturaux et les décisions techniques stratégiques.',
+      prompt:
+        'Vous êtes un architecte logiciel expert. Concentrez-vous sur la conception de systèmes scalables, les patterns architecturaux et les décisions techniques stratégiques.',
       enabled: false,
     },
   ],
@@ -105,8 +107,10 @@ export const usePromptManager = () => {
   useEffect(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
+
       if (saved) {
         const parsedConfig = JSON.parse(saved);
+
         // Merge avec defaultConfig pour s'assurer que toutes les propriétés existent
         const mergedConfig = {
           systemPrompt: { ...defaultConfig.systemPrompt, ...parsedConfig.systemPrompt },
@@ -129,6 +133,7 @@ export const usePromptManager = () => {
   // Save config to localStorage avec retry et validation
   const saveConfig = useCallback(async (config: PromptConfig) => {
     setIsSaving(true);
+
     try {
       // Validation de la configuration
       if (!config || typeof config !== 'object') {
@@ -137,9 +142,10 @@ export const usePromptManager = () => {
 
       const configToSave = JSON.stringify(config, null, 2);
       localStorage.setItem(STORAGE_KEY, configToSave);
-      
+
       // Vérification que la sauvegarde a fonctionné
       const saved = localStorage.getItem(STORAGE_KEY);
+
       if (!saved || JSON.parse(saved) === null) {
         throw new Error('Échec de la vérification de sauvegarde');
       }
@@ -147,14 +153,14 @@ export const usePromptManager = () => {
       setPromptConfig(config);
       setLastSaved(new Date());
       console.log('✅ Configuration sauvegardée avec succès');
-      
+
       // Toast de confirmation (si disponible)
       if (typeof window !== 'undefined' && (window as any).showToast) {
         (window as any).showToast('Configuration sauvegardée', 'success');
       }
     } catch (error) {
       console.error('❌ Erreur lors de la sauvegarde:', error);
-      
+
       // Toast d'erreur (si disponible)
       if (typeof window !== 'undefined' && (window as any).showToast) {
         (window as any).showToast('Erreur de sauvegarde', 'error');
@@ -164,15 +170,29 @@ export const usePromptManager = () => {
     }
   }, []);
 
-  // Auto-save effect avec debouncing
+  // Auto-save effect avec debouncing très court
   useEffect(() => {
-    if (!isLoading && promptConfig !== defaultConfig) {
+    if (!isLoading) {
       const timeoutId = setTimeout(() => {
         saveConfig(promptConfig);
-      }, 500); // Délai de 500ms pour éviter les sauvegardes trop fréquentes
+      }, 50); // Délai ultra-court de 50ms
 
-      return () => clearTimeout(timeoutId);
+      return () => {
+        clearTimeout(timeoutId);
+      };
     }
+  }, [promptConfig, isLoading, saveConfig]);
+
+  // Force save event listener
+  useEffect(() => {
+    const handleForceSave = () => {
+      if (!isLoading) {
+        saveConfig(promptConfig);
+      }
+    };
+
+    window.addEventListener('bolt-force-save', handleForceSave);
+    return () => window.removeEventListener('bolt-force-save', handleForceSave);
   }, [promptConfig, isLoading, saveConfig]);
 
   // Fonction de sauvegarde manuelle
@@ -180,109 +200,136 @@ export const usePromptManager = () => {
     saveConfig(promptConfig);
   }, [promptConfig, saveConfig]);
 
-  const updatePromptConfig = useCallback((updates: Partial<PromptConfig>) => {
-    const newConfig = { ...promptConfig, ...updates };
-    setPromptConfig(newConfig);
-  }, [promptConfig]);
+  const updatePromptConfig = useCallback(
+    (updates: Partial<PromptConfig>) => {
+      const newConfig = { ...promptConfig, ...updates };
+      setPromptConfig(newConfig);
+    },
+    [promptConfig],
+  );
 
-  const updateSystemPrompt = useCallback((systemPrompt: Partial<SystemPrompt>) => {
-    const newConfig = {
-      ...promptConfig,
-      systemPrompt: { ...promptConfig.systemPrompt, ...systemPrompt },
-    };
-    setPromptConfig(newConfig);
-  }, [promptConfig]);
+  const updateSystemPrompt = useCallback(
+    (systemPrompt: Partial<SystemPrompt>) => {
+      const newConfig = {
+        ...promptConfig,
+        systemPrompt: { ...promptConfig.systemPrompt, ...systemPrompt },
+      };
+      setPromptConfig(newConfig);
+    },
+    [promptConfig],
+  );
 
-  const addCustomPrompt = useCallback((prompt: Omit<CustomPrompt, 'id' | 'order'>) => {
-    const newPrompt: CustomPrompt = {
-      ...prompt,
-      id: Date.now().toString(),
-      order: promptConfig.customPrompts.length,
-    };
-    const newConfig = {
-      ...promptConfig,
-      customPrompts: [...promptConfig.customPrompts, newPrompt],
-    };
-    setPromptConfig(newConfig);
-  }, [promptConfig]);
+  const addCustomPrompt = useCallback(
+    (prompt: Omit<CustomPrompt, 'id' | 'order'>) => {
+      const newPrompt: CustomPrompt = {
+        ...prompt,
+        id: Date.now().toString(),
+        order: promptConfig.customPrompts.length,
+      };
+      const newConfig = {
+        ...promptConfig,
+        customPrompts: [...promptConfig.customPrompts, newPrompt],
+      };
+      setPromptConfig(newConfig);
+    },
+    [promptConfig],
+  );
 
-  const updateCustomPrompt = useCallback((id: string, updates: Partial<CustomPrompt>) => {
-    const newConfig = {
-      ...promptConfig,
-      customPrompts: promptConfig.customPrompts.map(p =>
-        p.id === id ? { ...p, ...updates } : p
-      ),
-    };
-    setPromptConfig(newConfig);
-  }, [promptConfig]);
+  const updateCustomPrompt = useCallback(
+    (id: string, updates: Partial<CustomPrompt>) => {
+      const newConfig = {
+        ...promptConfig,
+        customPrompts: promptConfig.customPrompts.map((p) => (p.id === id ? { ...p, ...updates } : p)),
+      };
+      setPromptConfig(newConfig);
+    },
+    [promptConfig],
+  );
 
-  const deleteCustomPrompt = useCallback((id: string) => {
-    const newConfig = {
-      ...promptConfig,
-      customPrompts: promptConfig.customPrompts.filter(p => p.id !== id),
-    };
-    setPromptConfig(newConfig);
-  }, [promptConfig]);
+  const deleteCustomPrompt = useCallback(
+    (id: string) => {
+      const newConfig = {
+        ...promptConfig,
+        customPrompts: promptConfig.customPrompts.filter((p) => p.id !== id),
+      };
+      setPromptConfig(newConfig);
+    },
+    [promptConfig],
+  );
 
-  const addTool = useCallback((tool: Omit<Tool, 'id'>) => {
-    const newTool: Tool = {
-      ...tool,
-      id: Date.now().toString(),
-    };
-    const newConfig = {
-      ...promptConfig,
-      tools: [...promptConfig.tools, newTool],
-    };
-    setPromptConfig(newConfig);
-  }, [promptConfig]);
+  const addTool = useCallback(
+    (tool: Omit<Tool, 'id'>) => {
+      const newTool: Tool = {
+        ...tool,
+        id: Date.now().toString(),
+      };
+      const newConfig = {
+        ...promptConfig,
+        tools: [...promptConfig.tools, newTool],
+      };
+      setPromptConfig(newConfig);
+    },
+    [promptConfig],
+  );
 
-  const updateTool = useCallback((id: string, updates: Partial<Tool>) => {
-    const newConfig = {
-      ...promptConfig,
-      tools: promptConfig.tools.map(t =>
-        t.id === id ? { ...t, ...updates } : t
-      ),
-    };
-    setPromptConfig(newConfig);
-  }, [promptConfig]);
+  const updateTool = useCallback(
+    (id: string, updates: Partial<Tool>) => {
+      const newConfig = {
+        ...promptConfig,
+        tools: promptConfig.tools.map((t) => (t.id === id ? { ...t, ...updates } : t)),
+      };
+      setPromptConfig(newConfig);
+    },
+    [promptConfig],
+  );
 
-  const deleteTool = useCallback((id: string) => {
-    const newConfig = {
-      ...promptConfig,
-      tools: promptConfig.tools.filter(t => t.id !== id),
-    };
-    setPromptConfig(newConfig);
-  }, [promptConfig]);
+  const deleteTool = useCallback(
+    (id: string) => {
+      const newConfig = {
+        ...promptConfig,
+        tools: promptConfig.tools.filter((t) => t.id !== id),
+      };
+      setPromptConfig(newConfig);
+    },
+    [promptConfig],
+  );
 
-  const addRole = useCallback((role: Omit<Role, 'id'>) => {
-    const newRole: Role = {
-      ...role,
-      id: Date.now().toString(),
-    };
-    const newConfig = {
-      ...promptConfig,
-      roles: [...promptConfig.roles, newRole],
-    };
-    setPromptConfig(newConfig);
-  }, [promptConfig]);
+  const addRole = useCallback(
+    (role: Omit<Role, 'id'>) => {
+      const newRole: Role = {
+        ...role,
+        id: Date.now().toString(),
+      };
+      const newConfig = {
+        ...promptConfig,
+        roles: [...promptConfig.roles, newRole],
+      };
+      setPromptConfig(newConfig);
+    },
+    [promptConfig],
+  );
 
-  const updateRole = useCallback((id: string, updates: Partial<Role>) => {
-    const newConfig = {
-      ...promptConfig,
-      roles: promptConfig.roles.map(r =>
-        r.id === id ? { ...r, ...updates } : r
-      ),
-    };
-    setPromptConfig(newConfig);
-  }, [promptConfig]);
+  const updateRole = useCallback(
+    (id: string, updates: Partial<Role>) => {
+      const newConfig = {
+        ...promptConfig,
+        roles: promptConfig.roles.map((r) => (r.id === id ? { ...r, ...updates } : r)),
+      };
+      setPromptConfig(newConfig);
+    },
+    [promptConfig],
+  );
 
-  const deleteRole = useCallback((id: string) => {
-    const newConfig = {
-      ...promptConfig,
-      roles: promptConfig.roles.filter(r => r.id !== id),
-    };
-    setPromptConfig(newConfig);
-  }, [promptConfig]);
+  const deleteRole = useCallback(
+    (id: string) => {
+      const newConfig = {
+        ...promptConfig,
+        roles: promptConfig.roles.filter((r) => r.id !== id),
+      };
+      setPromptConfig(newConfig);
+    },
+    [promptConfig],
+  );
 
   const resetToDefaults = useCallback(() => {
     setPromptConfig(defaultConfig);
@@ -298,42 +345,42 @@ export const usePromptManager = () => {
     }
 
     // Add enabled roles
-    const enabledRoles = promptConfig.roles.filter(r => r.enabled);
+    const enabledRoles = promptConfig.roles.filter((r) => r.enabled);
+
     if (enabledRoles.length > 0) {
       parts.push('\n--- RÔLES ACTIFS ---');
-      enabledRoles.forEach(role => {
+      enabledRoles.forEach((role) => {
         parts.push(`${role.name}: ${role.prompt}`);
       });
     }
 
     // Add custom prompts by category
-    const enabledCustomPrompts = promptConfig.customPrompts
-      .filter(p => p.enabled)
-      .sort((a, b) => a.order - b.order);
+    const enabledCustomPrompts = promptConfig.customPrompts.filter((p) => p.enabled).sort((a, b) => a.order - b.order);
 
-    const prefixPrompts = enabledCustomPrompts.filter(p => p.category === 'prefix');
-    const contextPrompts = enabledCustomPrompts.filter(p => p.category === 'context');
-    const suffixPrompts = enabledCustomPrompts.filter(p => p.category === 'suffix');
+    const prefixPrompts = enabledCustomPrompts.filter((p) => p.category === 'prefix');
+    const contextPrompts = enabledCustomPrompts.filter((p) => p.category === 'context');
+    const suffixPrompts = enabledCustomPrompts.filter((p) => p.category === 'suffix');
 
     if (prefixPrompts.length > 0) {
-      parts.unshift(...prefixPrompts.map(p => p.content));
+      parts.unshift(...prefixPrompts.map((p) => p.content));
     }
 
     if (contextPrompts.length > 0) {
       parts.push('\n--- CONTEXTE ADDITIONNEL ---');
-      parts.push(...contextPrompts.map(p => p.content));
+      parts.push(...contextPrompts.map((p) => p.content));
     }
 
     if (suffixPrompts.length > 0) {
       parts.push('\n--- INSTRUCTIONS FINALES ---');
-      parts.push(...suffixPrompts.map(p => p.content));
+      parts.push(...suffixPrompts.map((p) => p.content));
     }
 
     // Add enabled tools
-    const enabledTools = promptConfig.tools.filter(t => t.enabled);
+    const enabledTools = promptConfig.tools.filter((t) => t.enabled);
+
     if (enabledTools.length > 0) {
       parts.push('\n--- OUTILS DISPONIBLES ---');
-      enabledTools.forEach(tool => {
+      enabledTools.forEach((tool) => {
         parts.push(`${tool.name}: ${tool.description}`);
       });
     }

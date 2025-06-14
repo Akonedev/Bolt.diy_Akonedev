@@ -39,17 +39,17 @@ export const useEnhancedPrompts = () => {
     }
 
     // 3. Ajouter les éléments personnalisés si ils existent
-    const customPrompts = promptConfig.customPrompts.filter(p => p.enabled);
-    const activeRoles = promptConfig.roles.filter(r => r.enabled);
-    const activeTools = promptConfig.tools.filter(t => t.enabled);
+    const customPrompts = promptConfig.customPrompts.filter((p) => p.enabled);
+    const activeRoles = promptConfig.roles.filter((r) => r.enabled);
+    const activeTools = promptConfig.tools.filter((t) => t.enabled);
 
     if (customPrompts.length > 0 || activeRoles.length > 0 || activeTools.length > 0) {
       const customContent = generateFinalPrompt();
-      
+
       // Éviter la duplication du prompt système
-      const customLines = customContent.split('\n').filter(line => {
+      const customLines = customContent.split('\n').filter((line) => {
         const trimmed = line.trim();
-        return trimmed && !parts.some(part => part.includes(trimmed));
+        return trimmed && !parts.some((part) => part.includes(trimmed));
       });
 
       if (customLines.length > 0) {
@@ -65,15 +65,15 @@ export const useEnhancedPrompts = () => {
    * Récupère les informations sur la configuration actuelle
    */
   const getPromptInfo = () => {
-    const enabledCustomPrompts = promptConfig.customPrompts.filter(p => p.enabled);
-    const enabledRoles = promptConfig.roles.filter(r => r.enabled);
-    const enabledTools = promptConfig.tools.filter(t => t.enabled);
+    const enabledCustomPrompts = promptConfig.customPrompts.filter((p) => p.enabled);
+    const enabledRoles = promptConfig.roles.filter((r) => r.enabled);
+    const enabledTools = promptConfig.tools.filter((t) => t.enabled);
 
     return {
       isUsingCustomSystem: promptConfig.systemPrompt.enabled && !promptConfig.systemPrompt.isDefault,
       customPromptsCount: enabledCustomPrompts.length,
-      activeRoles: enabledRoles.map(r => ({ name: r.name, avatar: r.avatar })),
-      activeTools: enabledTools.map(t => ({ name: t.name, description: t.description })),
+      activeRoles: enabledRoles.map((r) => ({ name: r.name, avatar: r.avatar })),
+      activeTools: enabledTools.map((t) => ({ name: t.name, description: t.description })),
       totalEnhancements: enabledCustomPrompts.length + enabledRoles.length + enabledTools.length,
     };
   };
@@ -92,7 +92,9 @@ export const useEnhancedPrompts = () => {
     }
 
     if (info.activeRoles.length > 0) {
-      summaryParts.push(`${info.activeRoles.length} rôle(s): ${info.activeRoles.map(r => `${r.avatar} ${r.name}`).join(', ')}`);
+      summaryParts.push(
+        `${info.activeRoles.length} rôle(s): ${info.activeRoles.map((r) => `${r.avatar} ${r.name}`).join(', ')}`,
+      );
     }
 
     if (info.customPromptsCount > 0) {

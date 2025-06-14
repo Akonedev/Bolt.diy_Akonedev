@@ -59,9 +59,7 @@ export const CustomPromptEditor: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="text-lg font-semibold text-bolt-elements-textPrimary">
-            Prompts Personnalisés
-          </h3>
+          <h3 className="text-lg font-semibold text-bolt-elements-textPrimary">Prompts Personnalisés</h3>
           <p className="text-sm text-bolt-elements-textSecondary mt-1">
             Ajoutez des instructions spécifiques à vos besoins
           </p>
@@ -71,7 +69,7 @@ export const CustomPromptEditor: React.FC = () => {
           className={classNames(
             'flex items-center gap-2 px-4 py-2 rounded-lg transition-colors',
             'bg-purple-500 hover:bg-purple-600',
-            'text-white text-sm font-medium'
+            'text-white text-sm font-medium',
           )}
         >
           <div className="i-ph:plus" />
@@ -88,15 +86,11 @@ export const CustomPromptEditor: React.FC = () => {
             exit={{ opacity: 0, height: 0 }}
             className="mb-6 p-4 bg-bolt-elements-background-depth-2 rounded-lg border border-bolt-elements-borderColor"
           >
-            <h4 className="text-sm font-medium text-bolt-elements-textPrimary mb-4">
-              Nouveau prompt personnalisé
-            </h4>
-            
+            <h4 className="text-sm font-medium text-bolt-elements-textPrimary mb-4">Nouveau prompt personnalisé</h4>
+
             <div className="space-y-4">
               <div>
-                <label className="block text-xs font-medium text-bolt-elements-textPrimary mb-2">
-                  Nom du prompt
-                </label>
+                <label className="block text-xs font-medium text-bolt-elements-textPrimary mb-2">Nom du prompt</label>
                 <input
                   type="text"
                   value={newPrompt.name}
@@ -105,16 +99,14 @@ export const CustomPromptEditor: React.FC = () => {
                     'w-full p-3 rounded-lg text-sm',
                     'bg-bolt-elements-background-depth-3 border border-bolt-elements-borderColor',
                     'text-bolt-elements-textPrimary',
-                    'focus:outline-none focus:ring-2 focus:ring-purple-500/30'
+                    'focus:outline-none focus:ring-2 focus:ring-purple-500/30',
                   )}
                   placeholder="Ex: Instructions de code, Style de réponse..."
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-bolt-elements-textPrimary mb-2">
-                  Catégorie
-                </label>
+                <label className="block text-xs font-medium text-bolt-elements-textPrimary mb-2">Catégorie</label>
                 <select
                   value={newPrompt.category}
                   onChange={(e) => setNewPrompt({ ...newPrompt, category: e.target.value as any })}
@@ -122,7 +114,7 @@ export const CustomPromptEditor: React.FC = () => {
                     'w-full p-3 rounded-lg text-sm',
                     'bg-bolt-elements-background-depth-3 border border-bolt-elements-borderColor',
                     'text-bolt-elements-textPrimary',
-                    'focus:outline-none focus:ring-2 focus:ring-purple-500/30'
+                    'focus:outline-none focus:ring-2 focus:ring-purple-500/30',
                   )}
                 >
                   {Object.entries(categoryLabels).map(([key, label]) => (
@@ -134,9 +126,7 @@ export const CustomPromptEditor: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-bolt-elements-textPrimary mb-2">
-                  Contenu
-                </label>
+                <label className="block text-xs font-medium text-bolt-elements-textPrimary mb-2">Contenu</label>
                 <textarea
                   value={newPrompt.content}
                   onChange={(e) => setNewPrompt({ ...newPrompt, content: e.target.value })}
@@ -146,7 +136,7 @@ export const CustomPromptEditor: React.FC = () => {
                     'bg-bolt-elements-background-depth-3 border border-bolt-elements-borderColor',
                     'text-bolt-elements-textPrimary',
                     'focus:outline-none focus:ring-2 focus:ring-purple-500/30',
-                    'resize-none'
+                    'resize-none',
                   )}
                   placeholder="Saisissez les instructions ou le contexte à ajouter..."
                 />
@@ -166,7 +156,7 @@ export const CustomPromptEditor: React.FC = () => {
                     className={classNames(
                       'px-3 py-1.5 text-xs rounded-lg transition-colors',
                       'bg-bolt-elements-background-depth-3 hover:bg-bolt-elements-background-depth-4',
-                      'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary'
+                      'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary',
                     )}
                   >
                     Annuler
@@ -176,7 +166,7 @@ export const CustomPromptEditor: React.FC = () => {
                     className={classNames(
                       'px-3 py-1.5 text-xs rounded-lg transition-colors',
                       'bg-purple-500 hover:bg-purple-600',
-                      'text-white font-medium'
+                      'text-white font-medium',
                     )}
                   >
                     Ajouter
@@ -193,9 +183,7 @@ export const CustomPromptEditor: React.FC = () => {
         {sortedPrompts.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center">
             <div className="i-ph:chat-text text-4xl text-bolt-elements-textSecondary mb-4" />
-            <h4 className="text-lg font-medium text-bolt-elements-textPrimary mb-2">
-              Aucun prompt personnalisé
-            </h4>
+            <h4 className="text-lg font-medium text-bolt-elements-textPrimary mb-2">Aucun prompt personnalisé</h4>
             <p className="text-sm text-bolt-elements-textSecondary mb-4">
               Créez des prompts pour personnaliser le comportement de l'IA
             </p>
@@ -204,7 +192,7 @@ export const CustomPromptEditor: React.FC = () => {
               className={classNames(
                 'px-4 py-2 rounded-lg transition-colors',
                 'bg-purple-500 hover:bg-purple-600',
-                'text-white text-sm font-medium'
+                'text-white text-sm font-medium',
               )}
             >
               Créer mon premier prompt
@@ -220,34 +208,25 @@ export const CustomPromptEditor: React.FC = () => {
                   'p-4 rounded-lg border transition-all',
                   prompt.enabled
                     ? 'bg-bolt-elements-background-depth-2 border-bolt-elements-borderColor'
-                    : 'bg-bolt-elements-background-depth-1 border-bolt-elements-borderColor opacity-60'
+                    : 'bg-bolt-elements-background-depth-1 border-bolt-elements-borderColor opacity-60',
                 )}
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <h4 className="font-medium text-bolt-elements-textPrimary">
-                        {prompt.name}
-                      </h4>
+                      <h4 className="font-medium text-bolt-elements-textPrimary">{prompt.name}</h4>
                       <span
-                        className={classNames(
-                          'px-2 py-0.5 text-xs rounded-full font-medium',
-                          {
-                            'bg-blue-500/10 text-blue-500': prompt.category === 'prefix',
-                            'bg-green-500/10 text-green-500': prompt.category === 'context',
-                            'bg-orange-500/10 text-orange-500': prompt.category === 'suffix'
-                          }
-                        )}
+                        className={classNames('px-2 py-0.5 text-xs rounded-full font-medium', {
+                          'bg-blue-500/10 text-blue-500': prompt.category === 'prefix',
+                          'bg-green-500/10 text-green-500': prompt.category === 'context',
+                          'bg-orange-500/10 text-orange-500': prompt.category === 'suffix',
+                        })}
                       >
                         {categoryLabels[prompt.category]}
                       </span>
-                      <span className="text-xs text-bolt-elements-textSecondary">
-                        #{index + 1}
-                      </span>
+                      <span className="text-xs text-bolt-elements-textSecondary">#{index + 1}</span>
                     </div>
-                    <p className="text-sm text-bolt-elements-textSecondary line-clamp-2">
-                      {prompt.content}
-                    </p>
+                    <p className="text-sm text-bolt-elements-textSecondary line-clamp-2">{prompt.content}</p>
                   </div>
                   <div className="flex items-center gap-2 ml-4">
                     <Switch
@@ -259,7 +238,7 @@ export const CustomPromptEditor: React.FC = () => {
                       className={classNames(
                         'p-1.5 rounded-lg transition-colors',
                         'hover:bg-bolt-elements-background-depth-3',
-                        'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary'
+                        'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary',
                       )}
                     >
                       <div className="i-ph:pencil text-sm" />
@@ -269,7 +248,7 @@ export const CustomPromptEditor: React.FC = () => {
                       className={classNames(
                         'p-1.5 rounded-lg transition-colors',
                         'hover:bg-red-500/10',
-                        'text-bolt-elements-textSecondary hover:text-red-500'
+                        'text-bolt-elements-textSecondary hover:text-red-500',
                       )}
                     >
                       <div className="i-ph:trash text-sm" />
@@ -292,7 +271,7 @@ export const CustomPromptEditor: React.FC = () => {
                           'bg-bolt-elements-background-depth-3 border border-bolt-elements-borderColor',
                           'text-bolt-elements-textPrimary',
                           'focus:outline-none focus:ring-2 focus:ring-purple-500/30',
-                          'resize-none'
+                          'resize-none',
                         )}
                         rows={3}
                         onBlur={(e) => {
@@ -315,20 +294,18 @@ export const CustomPromptEditor: React.FC = () => {
         <div className="mt-4 p-4 bg-bolt-elements-background-depth-2 rounded-lg">
           <div className="grid grid-cols-4 gap-4 text-center">
             <div>
-              <div className="text-lg font-semibold text-bolt-elements-textPrimary">
-                {sortedPrompts.length}
-              </div>
+              <div className="text-lg font-semibold text-bolt-elements-textPrimary">{sortedPrompts.length}</div>
               <div className="text-xs text-bolt-elements-textSecondary">Total</div>
             </div>
             <div>
               <div className="text-lg font-semibold text-green-500">
-                {sortedPrompts.filter(p => p.enabled).length}
+                {sortedPrompts.filter((p) => p.enabled).length}
               </div>
               <div className="text-xs text-bolt-elements-textSecondary">Actifs</div>
             </div>
             <div>
               <div className="text-lg font-semibold text-bolt-elements-textPrimary">
-                {sortedPrompts.filter(p => p.category === 'context').length}
+                {sortedPrompts.filter((p) => p.category === 'context').length}
               </div>
               <div className="text-xs text-bolt-elements-textSecondary">Contexte</div>
             </div>

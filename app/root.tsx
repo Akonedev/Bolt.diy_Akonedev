@@ -82,9 +82,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 import { logStore } from './lib/stores/logs';
+import { useThemeManager } from './lib/hooks/useThemeManager';
 
 export default function App() {
   const theme = useStore(themeStore);
+  
+  // Initialize theme manager
+  useThemeManager();
 
   useEffect(() => {
     logStore.logSystem('Application initialized', {

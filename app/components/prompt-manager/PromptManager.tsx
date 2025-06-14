@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { classNames } from '~/utils/classNames';
 import { toast } from 'react-toastify';
-import { Switch } from '~/components/ui/Switch';
-import { usePromptManager, type CustomPrompt, type Tool, type Role } from '~/lib/hooks/usePromptManager';
+import { usePromptManager } from '~/lib/hooks/usePromptManager';
 import { SystemPromptEditor } from './SystemPromptEditor';
 import { CustomPromptEditor } from './CustomPromptEditor';
 import { ToolsManager } from './ToolsManager';
@@ -49,15 +48,9 @@ interface PromptManagerProps {
 
 export const PromptManager: React.FC<PromptManagerProps> = ({ onClose }) => {
   const [activeTab, setActiveTab] = useState('system');
-  const {
-    promptConfig,
-    updatePromptConfig,
-    isSaving,
-    lastSaved,
-    saveConfigManually
-  } = usePromptManager();
+  const { promptConfig, isSaving, lastSaved, saveConfigManually } = usePromptManager();
 
-  const ActiveComponent = tabs.find(tab => tab.id === activeTab)?.component || SystemPromptEditor;
+  const ActiveComponent = tabs.find((tab) => tab.id === activeTab)?.component || SystemPromptEditor;
 
   return (
     <motion.div
@@ -73,7 +66,7 @@ export const PromptManager: React.FC<PromptManagerProps> = ({ onClose }) => {
           'border border-bolt-elements-borderColor',
           'rounded-2xl shadow-2xl',
           'w-full max-w-6xl h-[90vh]',
-          'flex flex-col overflow-hidden'
+          'flex flex-col overflow-hidden',
         )}
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -85,9 +78,7 @@ export const PromptManager: React.FC<PromptManagerProps> = ({ onClose }) => {
           <div className="flex items-center gap-3">
             <div className="i-ph:chat-text text-2xl text-purple-500" />
             <div>
-              <h2 className="text-xl font-semibold text-bolt-elements-textPrimary">
-                Gestionnaire de Prompts
-              </h2>
+              <h2 className="text-xl font-semibold text-bolt-elements-textPrimary">Gestionnaire de Prompts</h2>
               <p className="text-sm text-bolt-elements-textSecondary">
                 Personnalisez vos prompts, outils et rôles pour optimiser vos conversations
               </p>
@@ -98,7 +89,7 @@ export const PromptManager: React.FC<PromptManagerProps> = ({ onClose }) => {
             className={classNames(
               'p-2 rounded-lg transition-colors',
               'hover:bg-bolt-elements-background-depth-3',
-              'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary'
+              'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary',
             )}
           >
             <div className="i-ph:x text-xl" />
@@ -118,7 +109,7 @@ export const PromptManager: React.FC<PromptManagerProps> = ({ onClose }) => {
                     'text-left text-sm font-medium',
                     activeTab === tab.id
                       ? 'bg-purple-500/10 text-purple-500 border border-purple-500/20'
-                      : 'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary hover:bg-bolt-elements-background-depth-3'
+                      : 'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary hover:bg-bolt-elements-background-depth-3',
                   )}
                 >
                   <div className={classNames(tab.icon, 'text-lg')} />
@@ -129,9 +120,7 @@ export const PromptManager: React.FC<PromptManagerProps> = ({ onClose }) => {
 
             {/* Status Section */}
             <div className="mt-8 p-4 bg-bolt-elements-background-depth-3 rounded-lg">
-              <h4 className="text-sm font-medium text-bolt-elements-textPrimary mb-3">
-                Configuration Active
-              </h4>
+              <h4 className="text-sm font-medium text-bolt-elements-textPrimary mb-3">Configuration Active</h4>
               <div className="space-y-2 text-xs">
                 <div className="flex justify-between">
                   <span className="text-bolt-elements-textSecondary">Prompt Système:</span>
@@ -142,19 +131,19 @@ export const PromptManager: React.FC<PromptManagerProps> = ({ onClose }) => {
                 <div className="flex justify-between">
                   <span className="text-bolt-elements-textSecondary">Prompts Custom:</span>
                   <span className="text-bolt-elements-textPrimary">
-                    {promptConfig.customPrompts.filter(p => p.enabled).length}
+                    {promptConfig.customPrompts.filter((p) => p.enabled).length}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-bolt-elements-textSecondary">Outils:</span>
                   <span className="text-bolt-elements-textPrimary">
-                    {promptConfig.tools.filter(t => t.enabled).length}
+                    {promptConfig.tools.filter((t) => t.enabled).length}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-bolt-elements-textSecondary">Rôles:</span>
                   <span className="text-bolt-elements-textPrimary">
-                    {promptConfig.roles.filter(r => r.enabled).length}
+                    {promptConfig.roles.filter((r) => r.enabled).length}
                   </span>
                 </div>
               </div>
@@ -182,9 +171,7 @@ export const PromptManager: React.FC<PromptManagerProps> = ({ onClose }) => {
         <div className="border-t border-bolt-elements-borderColor p-4 bg-bolt-elements-background-depth-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="text-xs text-bolt-elements-textSecondary">
-                Sauvegarde automatique activée
-              </div>
+              <div className="text-xs text-bolt-elements-textSecondary">Sauvegarde automatique activée</div>
               {/* Indicateur de sauvegarde */}
               <div className="flex items-center gap-2">
                 {isSaving ? (
@@ -195,9 +182,7 @@ export const PromptManager: React.FC<PromptManagerProps> = ({ onClose }) => {
                 ) : lastSaved ? (
                   <>
                     <div className="i-ph:check-circle text-green-500" />
-                    <span className="text-xs text-green-500">
-                      Sauvé à {lastSaved.toLocaleTimeString()}
-                    </span>
+                    <span className="text-xs text-green-500">Sauvé à {lastSaved.toLocaleTimeString()}</span>
                   </>
                 ) : (
                   <>
@@ -215,14 +200,10 @@ export const PromptManager: React.FC<PromptManagerProps> = ({ onClose }) => {
                   'px-4 py-2 text-sm rounded-lg transition-colors',
                   'bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300',
                   'text-white font-medium',
-                  'flex items-center gap-2'
+                  'flex items-center gap-2',
                 )}
               >
-                {isSaving ? (
-                  <div className="i-ph:spinner animate-spin" />
-                ) : (
-                  <div className="i-ph:floppy-disk" />
-                )}
+                {isSaving ? <div className="i-ph:spinner animate-spin" /> : <div className="i-ph:floppy-disk" />}
                 Sauvegarder
               </button>
               <button
@@ -233,7 +214,7 @@ export const PromptManager: React.FC<PromptManagerProps> = ({ onClose }) => {
                 className={classNames(
                   'px-4 py-2 text-sm rounded-lg transition-colors',
                   'bg-bolt-elements-background-depth-3 hover:bg-bolt-elements-background-depth-4',
-                  'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary'
+                  'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary',
                 )}
               >
                 Réinitialiser
@@ -243,7 +224,7 @@ export const PromptManager: React.FC<PromptManagerProps> = ({ onClose }) => {
                 className={classNames(
                   'px-4 py-2 text-sm rounded-lg transition-colors',
                   'bg-purple-500 hover:bg-purple-600',
-                  'text-white font-medium'
+                  'text-white font-medium',
                 )}
               >
                 Fermer

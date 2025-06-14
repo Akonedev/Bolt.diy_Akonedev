@@ -8,38 +8,44 @@ import { toast } from 'react-toastify';
 const predefinedRoles = [
   {
     name: 'Développeur Senior',
-    description: 'Expert en développement logiciel avec 10+ années d\'expérience',
-    prompt: 'Vous êtes un développeur senior avec plus de 10 ans d\'expérience. Concentrez-vous sur les bonnes pratiques, l\'architecture propre, la performance et la maintenabilité. Fournissez toujours du code de qualité production avec des explications détaillées.',
+    description: "Expert en développement logiciel avec 10+ années d'expérience",
+    prompt:
+      "Vous êtes un développeur senior avec plus de 10 ans d'expérience. Concentrez-vous sur les bonnes pratiques, l'architecture propre, la performance et la maintenabilité. Fournissez toujours du code de qualité production avec des explications détaillées.",
     avatar: '👨‍💻',
   },
   {
     name: 'Architecte Logiciel',
     description: 'Spécialiste en architecture de systèmes complexes',
-    prompt: 'Vous êtes un architecte logiciel expert. Concentrez-vous sur la conception de systèmes scalables, les patterns architecturaux, les décisions techniques stratégiques et l\'optimisation des performances à grande échelle.',
+    prompt:
+      "Vous êtes un architecte logiciel expert. Concentrez-vous sur la conception de systèmes scalables, les patterns architecturaux, les décisions techniques stratégiques et l'optimisation des performances à grande échelle.",
     avatar: '🏗️',
   },
   {
     name: 'Expert DevOps',
     description: 'Spécialiste en déploiement et infrastructure',
-    prompt: 'Vous êtes un expert DevOps. Concentrez-vous sur l\'automatisation, CI/CD, conteneurisation, orchestration, monitoring et optimisation des infrastructures cloud.',
+    prompt:
+      "Vous êtes un expert DevOps. Concentrez-vous sur l'automatisation, CI/CD, conteneurisation, orchestration, monitoring et optimisation des infrastructures cloud.",
     avatar: '⚙️',
   },
   {
     name: 'Expert Sécurité',
     description: 'Spécialiste en cybersécurité et sécurité applicative',
-    prompt: 'Vous êtes un expert en cybersécurité. Concentrez-vous sur l\'identification des vulnérabilités, les bonnes pratiques de sécurité, l\'authentification, l\'autorisation et la protection des données.',
+    prompt:
+      "Vous êtes un expert en cybersécurité. Concentrez-vous sur l'identification des vulnérabilités, les bonnes pratiques de sécurité, l'authentification, l'autorisation et la protection des données.",
     avatar: '🔒',
   },
   {
     name: 'Product Manager',
     description: 'Expert en gestion de produit et stratégie',
-    prompt: 'Vous êtes un Product Manager expérimenté. Concentrez-vous sur la stratégie produit, l\'analyse des besoins utilisateurs, la roadmap, les métriques et l\'optimisation de l\'expérience utilisateur.',
+    prompt:
+      "Vous êtes un Product Manager expérimenté. Concentrez-vous sur la stratégie produit, l'analyse des besoins utilisateurs, la roadmap, les métriques et l'optimisation de l'expérience utilisateur.",
     avatar: '📊',
   },
   {
     name: 'Designer UX/UI',
     description: 'Expert en expérience et interface utilisateur',
-    prompt: 'Vous êtes un designer UX/UI expert. Concentrez-vous sur l\'expérience utilisateur, l\'accessibilité, les principes de design, les systèmes de design et l\'optimisation des interfaces.',
+    prompt:
+      "Vous êtes un designer UX/UI expert. Concentrez-vous sur l'expérience utilisateur, l'accessibilité, les principes de design, les systèmes de design et l'optimisation des interfaces.",
     avatar: '🎨',
   },
 ];
@@ -68,13 +74,20 @@ export const RolesManager: React.FC = () => {
     toast.success('Rôle ajouté');
   };
 
-  const handleAddPredefinedRole = (predefined: typeof predefinedRoles[0]) => {
+  const handleAddPredefinedRole = (predefined: (typeof predefinedRoles)[0]) => {
     addRole({ ...predefined, enabled: true });
     toast.success(`Rôle "${predefined.name}" ajouté`);
   };
 
   const handleUpdateRole = (id: string, updates: Partial<Role>) => {
     updateRole(id, updates);
+    // Force immediate save for critical updates like enabled/disabled
+    if ('enabled' in updates) {
+      setTimeout(() => {
+        // This will trigger the auto-save immediately
+        window.dispatchEvent(new Event('bolt-force-save'));
+      }, 10);
+    }
     toast.success('Rôle mis à jour');
   };
 
@@ -85,16 +98,14 @@ export const RolesManager: React.FC = () => {
     }
   };
 
-  const enabledRoles = promptConfig.roles.filter(r => r.enabled);
+  const enabledRoles = promptConfig.roles.filter((r) => r.enabled);
 
   return (
     <div className="flex flex-col h-full p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="text-lg font-semibold text-bolt-elements-textPrimary">
-            Gestionnaire de Rôles
-          </h3>
+          <h3 className="text-lg font-semibold text-bolt-elements-textPrimary">Gestionnaire de Rôles</h3>
           <p className="text-sm text-bolt-elements-textSecondary mt-1">
             Définissez des rôles pour spécialiser le comportement de l'IA
           </p>
@@ -104,7 +115,7 @@ export const RolesManager: React.FC = () => {
           className={classNames(
             'flex items-center gap-2 px-4 py-2 rounded-lg transition-colors',
             'bg-purple-500 hover:bg-purple-600',
-            'text-white text-sm font-medium'
+            'text-white text-sm font-medium',
           )}
         >
           <div className="i-ph:plus" />
@@ -135,12 +146,10 @@ export const RolesManager: React.FC = () => {
 
       {/* Predefined Roles */}
       <div className="mb-6">
-        <h4 className="text-sm font-medium text-bolt-elements-textPrimary mb-3">
-          Rôles prédéfinis
-        </h4>
+        <h4 className="text-sm font-medium text-bolt-elements-textPrimary mb-3">Rôles prédéfinis</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {predefinedRoles.map((role) => {
-            const isAdded = promptConfig.roles.some(r => r.name === role.name);
+            const isAdded = promptConfig.roles.some((r) => r.name === role.name);
             return (
               <motion.div
                 key={role.name}
@@ -148,26 +157,26 @@ export const RolesManager: React.FC = () => {
                   'p-4 rounded-lg border transition-all cursor-pointer',
                   isAdded
                     ? 'bg-green-500/10 border-green-500/20'
-                    : 'bg-bolt-elements-background-depth-2 border-bolt-elements-borderColor hover:border-purple-500/30'
+                    : 'bg-bolt-elements-background-depth-2 border-bolt-elements-borderColor hover:border-purple-500/30',
                 )}
                 whileHover={{ scale: 1.02 }}
                 onClick={() => !isAdded && handleAddPredefinedRole(role)}
               >
                 <div className="flex items-start justify-between mb-2">
                   <div className="text-2xl">{role.avatar}</div>
-                  <div className={classNames(
-                    'p-1 rounded-full',
-                    isAdded ? 'bg-green-500 text-white' : 'bg-bolt-elements-background-depth-3 text-bolt-elements-textSecondary'
-                  )}>
+                  <div
+                    className={classNames(
+                      'p-1 rounded-full',
+                      isAdded
+                        ? 'bg-green-500 text-white'
+                        : 'bg-bolt-elements-background-depth-3 text-bolt-elements-textSecondary',
+                    )}
+                  >
                     <div className={classNames('text-xs', isAdded ? 'i-ph:check' : 'i-ph:plus')} />
                   </div>
                 </div>
-                <h5 className="text-sm font-medium text-bolt-elements-textPrimary mb-1">
-                  {role.name}
-                </h5>
-                <p className="text-xs text-bolt-elements-textSecondary line-clamp-2">
-                  {role.description}
-                </p>
+                <h5 className="text-sm font-medium text-bolt-elements-textPrimary mb-1">{role.name}</h5>
+                <p className="text-xs text-bolt-elements-textSecondary line-clamp-2">{role.description}</p>
               </motion.div>
             );
           })}
@@ -183,16 +192,12 @@ export const RolesManager: React.FC = () => {
             exit={{ opacity: 0, height: 0 }}
             className="mb-6 p-4 bg-bolt-elements-background-depth-2 rounded-lg border border-bolt-elements-borderColor"
           >
-            <h4 className="text-sm font-medium text-bolt-elements-textPrimary mb-4">
-              Nouveau rôle personnalisé
-            </h4>
-            
+            <h4 className="text-sm font-medium text-bolt-elements-textPrimary mb-4">Nouveau rôle personnalisé</h4>
+
             <div className="space-y-4">
               <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-bolt-elements-textPrimary mb-2">
-                    Avatar
-                  </label>
+                  <label className="block text-xs font-medium text-bolt-elements-textPrimary mb-2">Avatar</label>
                   <input
                     type="text"
                     value={newRole.avatar}
@@ -201,15 +206,13 @@ export const RolesManager: React.FC = () => {
                       'w-full p-3 rounded-lg text-sm text-center',
                       'bg-bolt-elements-background-depth-3 border border-bolt-elements-borderColor',
                       'text-bolt-elements-textPrimary',
-                      'focus:outline-none focus:ring-2 focus:ring-purple-500/30'
+                      'focus:outline-none focus:ring-2 focus:ring-purple-500/30',
                     )}
                     placeholder="🤖"
                   />
                 </div>
                 <div className="col-span-2">
-                  <label className="block text-xs font-medium text-bolt-elements-textPrimary mb-2">
-                    Nom du rôle
-                  </label>
+                  <label className="block text-xs font-medium text-bolt-elements-textPrimary mb-2">Nom du rôle</label>
                   <input
                     type="text"
                     value={newRole.name}
@@ -218,7 +221,7 @@ export const RolesManager: React.FC = () => {
                       'w-full p-3 rounded-lg text-sm',
                       'bg-bolt-elements-background-depth-3 border border-bolt-elements-borderColor',
                       'text-bolt-elements-textPrimary',
-                      'focus:outline-none focus:ring-2 focus:ring-purple-500/30'
+                      'focus:outline-none focus:ring-2 focus:ring-purple-500/30',
                     )}
                     placeholder="Ex: Expert Frontend"
                   />
@@ -226,9 +229,7 @@ export const RolesManager: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-bolt-elements-textPrimary mb-2">
-                  Description
-                </label>
+                <label className="block text-xs font-medium text-bolt-elements-textPrimary mb-2">Description</label>
                 <input
                   type="text"
                   value={newRole.description}
@@ -237,16 +238,14 @@ export const RolesManager: React.FC = () => {
                     'w-full p-3 rounded-lg text-sm',
                     'bg-bolt-elements-background-depth-3 border border-bolt-elements-borderColor',
                     'text-bolt-elements-textPrimary',
-                    'focus:outline-none focus:ring-2 focus:ring-purple-500/30'
+                    'focus:outline-none focus:ring-2 focus:ring-purple-500/30',
                   )}
                   placeholder="Courte description du rôle"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-bolt-elements-textPrimary mb-2">
-                  Prompt du rôle
-                </label>
+                <label className="block text-xs font-medium text-bolt-elements-textPrimary mb-2">Prompt du rôle</label>
                 <textarea
                   value={newRole.prompt}
                   onChange={(e) => setNewRole({ ...newRole, prompt: e.target.value })}
@@ -256,7 +255,7 @@ export const RolesManager: React.FC = () => {
                     'bg-bolt-elements-background-depth-3 border border-bolt-elements-borderColor',
                     'text-bolt-elements-textPrimary',
                     'focus:outline-none focus:ring-2 focus:ring-purple-500/30',
-                    'resize-none'
+                    'resize-none',
                   )}
                   placeholder="Décrivez le comportement et l'expertise de ce rôle..."
                 />
@@ -276,7 +275,7 @@ export const RolesManager: React.FC = () => {
                     className={classNames(
                       'px-3 py-1.5 text-xs rounded-lg transition-colors',
                       'bg-bolt-elements-background-depth-3 hover:bg-bolt-elements-background-depth-4',
-                      'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary'
+                      'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary',
                     )}
                   >
                     Annuler
@@ -286,7 +285,7 @@ export const RolesManager: React.FC = () => {
                     className={classNames(
                       'px-3 py-1.5 text-xs rounded-lg transition-colors',
                       'bg-purple-500 hover:bg-purple-600',
-                      'text-white font-medium'
+                      'text-white font-medium',
                     )}
                   >
                     Ajouter
@@ -303,9 +302,7 @@ export const RolesManager: React.FC = () => {
         {promptConfig.roles.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center">
             <div className="i-ph:user-circle text-4xl text-bolt-elements-textSecondary mb-4" />
-            <h4 className="text-lg font-medium text-bolt-elements-textPrimary mb-2">
-              Aucun rôle configuré
-            </h4>
+            <h4 className="text-lg font-medium text-bolt-elements-textPrimary mb-2">Aucun rôle configuré</h4>
             <p className="text-sm text-bolt-elements-textSecondary mb-4">
               Ajoutez des rôles pour spécialiser le comportement de l'IA
             </p>
@@ -314,7 +311,7 @@ export const RolesManager: React.FC = () => {
               className={classNames(
                 'px-4 py-2 rounded-lg transition-colors',
                 'bg-purple-500 hover:bg-purple-600',
-                'text-white text-sm font-medium'
+                'text-white text-sm font-medium',
               )}
             >
               Ajouter mon premier rôle
@@ -330,24 +327,18 @@ export const RolesManager: React.FC = () => {
                   'p-4 rounded-lg border transition-all',
                   role.enabled
                     ? 'bg-bolt-elements-background-depth-2 border-bolt-elements-borderColor'
-                    : 'bg-bolt-elements-background-depth-1 border-bolt-elements-borderColor opacity-60'
+                    : 'bg-bolt-elements-background-depth-1 border-bolt-elements-borderColor opacity-60',
                 )}
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-start gap-3 flex-1">
                     <div className="text-2xl">{role.avatar}</div>
                     <div className="flex-1">
-                      <h4 className="font-medium text-bolt-elements-textPrimary mb-1">
-                        {role.name}
-                      </h4>
+                      <h4 className="font-medium text-bolt-elements-textPrimary mb-1">{role.name}</h4>
                       {role.description && (
-                        <p className="text-sm text-bolt-elements-textSecondary mb-2">
-                          {role.description}
-                        </p>
+                        <p className="text-sm text-bolt-elements-textSecondary mb-2">{role.description}</p>
                       )}
-                      <p className="text-xs text-bolt-elements-textSecondary line-clamp-2">
-                        {role.prompt}
-                      </p>
+                      <p className="text-xs text-bolt-elements-textSecondary line-clamp-2">{role.prompt}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 ml-4">
@@ -360,7 +351,7 @@ export const RolesManager: React.FC = () => {
                       className={classNames(
                         'p-1.5 rounded-lg transition-colors',
                         'hover:bg-bolt-elements-background-depth-3',
-                        'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary'
+                        'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary',
                       )}
                     >
                       <div className="i-ph:pencil text-sm" />
@@ -370,7 +361,7 @@ export const RolesManager: React.FC = () => {
                       className={classNames(
                         'p-1.5 rounded-lg transition-colors',
                         'hover:bg-red-500/10',
-                        'text-bolt-elements-textSecondary hover:text-red-500'
+                        'text-bolt-elements-textSecondary hover:text-red-500',
                       )}
                     >
                       <div className="i-ph:trash text-sm" />
@@ -392,7 +383,7 @@ export const RolesManager: React.FC = () => {
                           className={classNames(
                             'p-2 rounded text-sm text-center',
                             'bg-bolt-elements-background-depth-3 border border-bolt-elements-borderColor',
-                            'text-bolt-elements-textPrimary'
+                            'text-bolt-elements-textPrimary',
                           )}
                           placeholder="🤖"
                           onBlur={(e) => {
@@ -406,7 +397,7 @@ export const RolesManager: React.FC = () => {
                           className={classNames(
                             'col-span-3 p-2 rounded text-sm',
                             'bg-bolt-elements-background-depth-3 border border-bolt-elements-borderColor',
-                            'text-bolt-elements-textPrimary'
+                            'text-bolt-elements-textPrimary',
                           )}
                           placeholder="Nom du rôle"
                           onBlur={(e) => {
@@ -421,7 +412,7 @@ export const RolesManager: React.FC = () => {
                         className={classNames(
                           'w-full p-2 rounded text-sm',
                           'bg-bolt-elements-background-depth-3 border border-bolt-elements-borderColor',
-                          'text-bolt-elements-textPrimary'
+                          'text-bolt-elements-textPrimary',
                         )}
                         placeholder="Description"
                         onBlur={(e) => {
@@ -436,7 +427,7 @@ export const RolesManager: React.FC = () => {
                           'w-full p-2 rounded text-sm',
                           'bg-bolt-elements-background-depth-3 border border-bolt-elements-borderColor',
                           'text-bolt-elements-textPrimary',
-                          'resize-none'
+                          'resize-none',
                         )}
                         rows={3}
                         placeholder="Prompt du rôle"
@@ -460,15 +451,11 @@ export const RolesManager: React.FC = () => {
         <div className="mt-4 p-4 bg-bolt-elements-background-depth-2 rounded-lg">
           <div className="grid grid-cols-4 gap-4 text-center">
             <div>
-              <div className="text-lg font-semibold text-bolt-elements-textPrimary">
-                {promptConfig.roles.length}
-              </div>
+              <div className="text-lg font-semibold text-bolt-elements-textPrimary">{promptConfig.roles.length}</div>
               <div className="text-xs text-bolt-elements-textSecondary">Total</div>
             </div>
             <div>
-              <div className="text-lg font-semibold text-green-500">
-                {enabledRoles.length}
-              </div>
+              <div className="text-lg font-semibold text-green-500">{enabledRoles.length}</div>
               <div className="text-xs text-bolt-elements-textSecondary">Actifs</div>
             </div>
             <div>
@@ -478,9 +465,7 @@ export const RolesManager: React.FC = () => {
               <div className="text-xs text-bolt-elements-textSecondary">Tokens</div>
             </div>
             <div>
-              <div className="text-lg font-semibold text-purple-500">
-                {enabledRoles.length > 0 ? '✓' : '✗'}
-              </div>
+              <div className="text-lg font-semibold text-purple-500">{enabledRoles.length > 0 ? '✓' : '✗'}</div>
               <div className="text-xs text-bolt-elements-textSecondary">Spécialisé</div>
             </div>
           </div>
